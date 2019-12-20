@@ -5,7 +5,7 @@ import datetime as dt
 from bokeh.io import curdoc, output_file, show, output_notebook
 from bokeh.plotting import figure
 from bokeh.models import HoverTool, ColumnDataSource, DateRangeSlider, Select
-from bokeh.layouts import widgetbox, column
+from bokeh.layouts import widgetbox, row, column
 import pandas as pd
 
 csv_files = glob.glob(r'C:\Users\massv\\OneDrive\Documents\Trading\data\*.csv')
@@ -13,13 +13,13 @@ csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
 
 bars_shown = 200
 
-data = pd.read_csv(csv_files[0],parse_dates = True, index_col = 'Date')
+data = pd.read_csv(r'C:\Users\massv\\OneDrive\Documents\Trading\data\NSEI.csv',parse_dates = True, index_col = 'Date')
 data = data.fillna(method='ffill')
 data['Bar'] = [i for i in range(len(data))]
 data['Colors'] = ['Green' if data.iloc[i].Close > data.iloc[i].Open else 'Red' for i in range(len(data))]
 
-start = min(data.index)
 end = max(data.index)
+start = end - dt.timedelta(days=bars_shown)
  
 # Make the ColumnDataSource: source
 source = ColumnDataSource(data={
@@ -65,8 +65,8 @@ def update_selector(attr, old, new):
     data['Bar'] = [i for i in range(len(data))]
     data['Colors'] = ['Green' if data.iloc[i].Close > data.iloc[i].Open else 'Red' for i in range(len(data))]
 
-    start = min(data.index)
     end = max(data.index)
+    start = end - dt.timedelta(days=bars_shown)
  
     # Make the ColumnDataSource: source
     new_data = ColumnDataSource(data={
@@ -83,8 +83,8 @@ def update_selector(attr, old, new):
     source.data.update(new_data.data)
 
 # Make a slider object: slider
-slider = DateRangeSlider(title="Date Range: ", start=start, end=end, 
-                         value=(end-dt.timedelta(days=bars_shown),end), step=1, width=1300)
+slider = DateRangeSlider(title="Date Range: ", start=min(data.index), end=max(data.index), 
+                         value=(start,end), step=1, width=1000)
 
 # Create the figure: p
 p = figure(title='Line chart', x_axis_label='Dates', y_axis_label='Closing Price', 
@@ -109,14 +109,14 @@ slider.on_change('value',update_plot)
 # Create a dropdown Select widget for the x data: x_select
 select = Select(
     options=csv_file_names,
-    value=csv_file_names[0],
+    value='NSEI',
     title='Stock Selector'
 )
 
 select.on_change('value', update_selector)
 
 # Add the plot to the current document and add a title
-layout = column(select, p, widgetbox(slider))
+layout = column(row(select, widgetbox(slider)), p)
 curdoc().add_root(layout)
 curdoc().title = 'Stock Chart'
 
