@@ -14,7 +14,7 @@ import symphonie_indicators_v1_0 as sym
 csv_files = glob.glob(r'C:\Users\massv\\OneDrive\Documents\Trading\data\Weekly\*.csv')
 csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
 
-bars_shown = 200
+bars_shown = 1040
 
 data = pd.read_csv(r'C:\Users\massv\\OneDrive\Documents\Trading\data\Weekly\^GSPTSE.csv',parse_dates = True)
 data = data.fillna(method='ffill')
