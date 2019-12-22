@@ -11,12 +11,12 @@ import pandas as pd
 sys.path.insert(0, 'C:/Users/massv/Dropbox/Trading/Projects/Indicators')
 import symphonie_indicators_v1_0 as sym
 
-csv_files = glob.glob(r'C:\Users\massv\\OneDrive\Documents\Trading\data\*.csv')
+csv_files = glob.glob(r'C:\Users\massv\\OneDrive\Documents\Trading\data\Weekly\*.csv')
 csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
 
 bars_shown = 200
 
-data = pd.read_csv(r'C:\Users\massv\\OneDrive\Documents\Trading\data\^GSPTSE.csv',parse_dates = True)
+data = pd.read_csv(r'C:\Users\massv\\OneDrive\Documents\Trading\data\Weekly\^GSPTSE.csv',parse_dates = True)
 data = data.fillna(method='ffill')
 data['Bar'] = [i for i in range(len(data))]
 data['Colors'] = ['Green' if data.iloc[i].Close > data.iloc[i].Open else 'Red' for i in range(len(data))]
