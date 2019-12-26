@@ -8,8 +8,8 @@ from bokeh.plotting import figure
 from bokeh.models import HoverTool, ColumnDataSource, DateRangeSlider, Select
 from bokeh.layouts import widgetbox, row, column
 import pandas as pd
-sys.path.insert(0, 'C:/Users/massv/Dropbox/Trading/Projects/Indicators')
-import symphonie_indicators_v1_0 as sym
+sys.path.insert(0, 'C:/Users/massv/OneDrive/Documents/GitHub/technical-indicators')
+import symphonie_indicators as sym
 
 csv_files = glob.glob(r'C:\Users\massv\OneDrive\Documents\Trading\data\Daily\*.csv')
 csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
@@ -59,7 +59,7 @@ data = pd.concat([data,symphonie], axis=1)
 end = max(data.index).date()
 start = end - dt.timedelta(days=bars_shown)
 
-#Creating dataset for monthly OHLC
+#Creating dataset for weekly OHLC
 data['week_start'] = [data.index[i] - dt.timedelta(days=data.index[i].weekday()) for i in range(len(data))]
 data['week_current'] = data.index
 data['week_open'] = 0
@@ -85,7 +85,7 @@ for i in range(len(data)):
     data.iloc[i,weekLowCol] = a['Low'].min()
     data.iloc[i,weekVolumeCol] = a['Volume'].sum()
 
-#Extracting monthly OHLC to a different dataset
+#Extracting weekly OHLC to a different dataset
 data_weekly = data[['week_open','week_high','week_low','week_close','week_adjclose','week_volume']]
 data_weekly.columns = ['Open','High','Low','Close','Adj Close','Volume']
 data_weekly.reset_index(inplace=True)
