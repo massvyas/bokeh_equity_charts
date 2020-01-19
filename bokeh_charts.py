@@ -8,8 +8,8 @@ from bokeh.plotting import figure
 from bokeh.models import HoverTool, ColumnDataSource, DateRangeSlider, Select
 from bokeh.layouts import widgetbox, row, column
 import pandas as pd
-sys.path.insert(0, 'C:/Users/massv/Dropbox/Trading/Projects/Indicators')
-import symphonie_indicators_v1_0 as sym
+sys.path.insert(0, 'C:/Users/massv/OneDrive/Documents/GitHub/technical-indicators')
+import symphonie_indicators as sym
 
 csv_files = glob.glob(r'C:\Users\massv\OneDrive\Documents\Trading\data\Daily\*.csv')
 csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
