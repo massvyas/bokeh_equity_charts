@@ -10,6 +10,7 @@ from bokeh.layouts import widgetbox, row, column
 import pandas as pd
 sys.path.insert(0, 'C:/Users/massv/OneDrive/Documents/GitHub/technical-indicators')
 import symphonie_indicators as sym
+import technical_indicators as ta
 
 csv_files = glob.glob(r'C:\Users\massv\OneDrive\Documents\Trading\data\Daily\*.csv')
 csv_file_names = [os.path.basename(file)[:-4] for file in csv_files]
@@ -20,6 +21,9 @@ data = pd.read_csv(r'C:\Users\massv\OneDrive\Documents\Trading\data\Daily\^GSPTS
 data = data.fillna(method='ffill')
 data['Bar'] = [i for i in range(len(data))]
 data['Colors'] = ['Green' if data.iloc[i].Close > data.iloc[i].Open else 'Red' for i in range(len(data))]
+
+#Fetching supply demand indicator values
+sd = ta.sd(data, period=2, adj=False)
 
 #Fetching symphonie indicator values, removing unwanted columns and renaming indicator columns
 trendline = sym.trendline(data,cciPeriod=63,atrPeriod=18,st=0).drop(['Open','High','Low','Close','trendUp','trendDown','trend'],axis='columns')
@@ -36,6 +40,7 @@ sentiment = sym.sentiment(data, period=12).drop(['Open','High','Low','Close','g_
 sentiment['sentimentUpInd'] = (sentiment['SentimentTrend']==1)*1
 sentiment['sentimentDownInd'] = (sentiment['SentimentTrend']==-1)*1
 sentiment.drop(['SentimentTrend'],axis='columns', inplace=True)
+
 
 #Merging all symphonie indicators into one df
 symphonie = pd.concat([trendline,emotion,extreme,sentiment],axis=1)
